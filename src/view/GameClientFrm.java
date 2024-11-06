@@ -1,8 +1,6 @@
 package view;
-
 import view.*;
 import controller.Client;
-import static controller.Client.user;
 import java.awt.BasicStroke;
 
 import java.awt.Color;
@@ -21,10 +19,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -64,7 +60,6 @@ public class GameClientFrm extends javax.swing.JFrame {
 
     public GameClientFrm(User competitor, int room_ID, String competitorIP, int[][]matrix, String pikachuStr) throws MalformedURLException, IOException {
         initComponents();
-        System.out.println(pikachuStr+"11");
         this.listPikachu = new ArrayList<>();
         for(String pikachu: pikachuStr.split(",")){
             listPikachu.add(pikachu);
@@ -74,6 +69,14 @@ public class GameClientFrm extends javax.swing.JFrame {
         this.competitorIP = competitorIP;
         values = matrix;
         initializeGameBoard();
+        
+        for(int x = 0; x < 7;x++){
+            for(int y = 0; y < 7;y++){
+                System.out.print(this.values[x][y]+" ");
+            }       
+            System.out.println("");
+        }
+        
         isSending = false;
         isListening = false;
 
@@ -191,12 +194,11 @@ public class GameClientFrm extends javax.swing.JFrame {
 
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                
                 JButton button = new JButton(String.valueOf(values[i][j]));
                 URL url = new URL(this.listPikachu.get(values[i][j]));
                 Image image = ImageIO.read(url);
                 if (image != null) {
-                    Image scaledImage = image.getScaledInstance(70, 65, Image.SCALE_SMOOTH);
+                    Image scaledImage = image.getScaledInstance(72, 65, Image.SCALE_SMOOTH);
                     ImageIcon icon = new ImageIcon(scaledImage);
                     button.setIcon(icon);
                 } else {
@@ -206,11 +208,8 @@ public class GameClientFrm extends javax.swing.JFrame {
                 button.addActionListener(new ButtonClickListener(i, j));
                 buttons[i][j] = button;
                 gridPanel.add(button);
-                
-                
             }
         }
-
         jLayeredPane.add(gridPanel, JLayeredPane.DEFAULT_LAYER);
         linePanel.setBounds(0, 0, 500, 500);
         linePanel.setOpaque(false);
@@ -737,7 +736,7 @@ public class GameClientFrm extends javax.swing.JFrame {
 
     public void startTimer() {
         countDownLabel.setVisible(true);
-        second = 10;
+        second = 40;
         minute = 0;
         timer.start();
     }
@@ -794,7 +793,6 @@ public class GameClientFrm extends javax.swing.JFrame {
         }
 
         private void checkAndRemove() {
-            // Kiểm tra xem hai nút có giống nhau không
             if (firstButton != null && secondButton != null && firstButton.getText().equals(secondButton.getText())) {
                 int row1 = getButtonRow(firstButton);
                 int col1 = getButtonCol(firstButton);
@@ -818,7 +816,6 @@ public class GameClientFrm extends javax.swing.JFrame {
                     textScore.setText(score+"");
                 }
             }
-            // Reset buttons regardless of their states
             firstButton = null;
             secondButton = null;
         }
@@ -844,31 +841,68 @@ public class GameClientFrm extends javax.swing.JFrame {
         private boolean isValidPath(int row1, int col1, int row2, int col2) {
             return isStraightPathClear(row1, col1, row2, col2) ||
                    isOneCornerPathClear(row1, col1, row2, col2) ||
-                   isTwoCornerPathClear(row1, col1, row2, col2);
+                   isTwoCornerPathClear(row1, col1, row2, col2)||
+                   isOutPathClear(row1, col1, row2, col2);
             
         }
+        
         private boolean isStraightPathClear(int row1, int col1, int row2, int col2) {
-            if (row1 == row2) { // Same row
+            if (row1 == row2) { 
                 for (int col = Math.min(col1, col2) + 1; col < Math.max(col1, col2); col++) {
                     if (buttons[row1][col].isVisible()) return false;
                 }
                 return true;
-            } else if (col1 == col2) { // Same column
+            } else if (col1 == col2) {
                 for (int row = Math.min(row1, row2) + 1; row < Math.max(row1, row2); row++) {
                     if (buttons[row][col1].isVisible()) return false;
                 }
                 return true;
             }
+            else if( col1==row1 && col2==row2 && row1==col2) return true;
+            return false;
+        }
+        
+        private boolean isOneCornerPathClear(int row1, int col1, int row2, int col2) {
+            return (isStraightPathClear(row1, col1, row1, col2) && 
+                    isStraightPathClear(row1, col2, row2, col2) && 
+                    !buttons[row1][col2].isVisible()) ||
+                   (isStraightPathClear(row1, col1, row2, col1) 
+                    && isStraightPathClear(row2, col1, row2, col2) 
+                    && !buttons[row2][col1].isVisible());
+        }
+
+        private boolean isOutPathClear(int row1, int col1, int row2, int col2) {
+            if(row1==0 && row2==0 || row1==SIZE-1 && row2 == SIZE-1 || 
+                    col1==0 && col2==0 ||col1==SIZE-1 && col2==SIZE-1) return true;
+            
+            if(isStraightPathClear(row1, col1, 0, col1) && (!buttons[0][col1].isVisible()||row1==0)&&
+                    isStraightPathClear(row2, col2, 0, col2)&& (!buttons[0][col2].isVisible()||row2==0)){
+                System.out.println("1");
+                return true;
+            }
+                
+            
+            if(isStraightPathClear(row1, col1, SIZE-1, col1) && (!buttons[SIZE-1][col1].isVisible()||row1==SIZE-1)&&
+                    isStraightPathClear(row2, col2, SIZE-1, col2) && (!buttons[SIZE-1][col2].isVisible()||row2==SIZE-1)){
+                System.out.println("2");
+                return true;
+            } 
+                
+            
+            if(isStraightPathClear(row1, col1, row1, 0) && (!buttons[row1][0].isVisible()||col1==0)&&
+                    isStraightPathClear(row2, col2, row2, 0)&& (!buttons[row2][0].isVisible()||col2==0)){
+                System.out.println("3");
+                return true;
+            }
+            
+            if(isStraightPathClear(row1, col1, row1, SIZE-1) && (!buttons[row1][SIZE-1].isVisible()||col1==SIZE-1)&&
+                    isStraightPathClear(row2, col2, row2, SIZE-1)&& (!buttons[row2][SIZE-1].isVisible()||col2==SIZE-1)){
+                System.out.println("4");
+                return true;
+            } 
             return false;
         }
 
-        // Check if there is a clear path with one corner
-        private boolean isOneCornerPathClear(int row1, int col1, int row2, int col2) {
-            return (isStraightPathClear(row1, col1, row1, col2) && isStraightPathClear(row1, col2, row2, col2) && !buttons[row1][col2].isVisible()) ||
-                   (isStraightPathClear(row1, col1, row2, col1) && isStraightPathClear(row2, col1, row2, col2) && !buttons[row2][col1].isVisible());
-        }
-
-        // Check if there is a clear path with two corners
         private boolean isTwoCornerPathClear(int row1, int col1, int row2, int col2) {
             for (int i = 0; i < SIZE; i++) {
                 if (!buttons[row1][i].isVisible() &&
@@ -891,8 +925,8 @@ public class GameClientFrm extends javax.swing.JFrame {
             start = SwingUtilities.convertPoint(b1, b1.getWidth() / 2, b1.getHeight() / 2, this);
             end = SwingUtilities.convertPoint(b2, b2.getWidth() / 2, b2.getHeight() / 2, this);
             // Tạo các điểm gấp khúc
-            int midX = (start.x + end.x) / 2; // Điểm giữa theo chiều ngang
-            int midY = start.y; // Giữ điểm giữa theo chiều dọc
+            int midX = (start.x + end.x) / 2; 
+            int midY = start.y; 
 
             // Vẽ lại
             repaint();
