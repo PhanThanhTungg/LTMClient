@@ -731,12 +731,9 @@ public class GameClientFrm extends javax.swing.JFrame {
         return 0;
     }
 
-    
-
-
     public void startTimer() {
         countDownLabel.setVisible(true);
-        second = 10;
+        second = 60;
         minute = 0;
         timer.start();
     }

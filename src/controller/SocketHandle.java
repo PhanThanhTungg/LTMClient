@@ -90,7 +90,7 @@ public class SocketHandle implements Runnable {
     public void run() {
 
         try {
-            socketOfClient = new Socket("127.0.0.1", 7777);
+            socketOfClient = new Socket("127.0.0.1", 10);
             System.out.println("Kết nối thành công!");
             outputWriter = new BufferedWriter(new OutputStreamWriter(socketOfClient.getOutputStream()));
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(socketOfClient.getInputStream()));
@@ -199,6 +199,7 @@ public class SocketHandle implements Runnable {
                     String nameCompetitor = messageSplit[3];
                     int myScore = Integer.parseInt(messageSplit[4]);
                     int competitorScore = Integer.parseInt(messageSplit[5]);
+                    Client.closeAllViews();
                     Client.openView(Client.View.RESULT_NOTIFICATION_FRM,result, avatarCompetitor, nameCompetitor,myScore,competitorScore);
                 }
                 
@@ -227,11 +228,6 @@ public class SocketHandle implements Runnable {
                     }
                 }
                 
-//                if(messageSplit[0].equals("return-play-list")){
-//                    if(Client.adminFrm!=null){
-//                        Client.adminFrm.setDataToTable(getListPlay(messageSplit));
-//                    }
-//                }
                 //Xử lý lấy danh sách phòng
                 if (messageSplit[0].equals("room-list")) {
                     Vector<String> rooms = new Vector<>();

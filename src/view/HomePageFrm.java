@@ -112,7 +112,6 @@ public class HomePageFrm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         historyButton = new javax.swing.JButton();
-        listUserButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -306,7 +305,7 @@ public class HomePageFrm extends javax.swing.JFrame {
         goRoomButton.setBackground(new java.awt.Color(102, 102, 102));
         goRoomButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         goRoomButton.setForeground(new java.awt.Color(204, 204, 204));
-        goRoomButton.setText("Vào phòng");
+        goRoomButton.setText("Tìm phòng");
         goRoomButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 goRoomButtonActionPerformed(evt);
@@ -352,7 +351,7 @@ public class HomePageFrm extends javax.swing.JFrame {
         findRoomButton.setBackground(new java.awt.Color(102, 102, 102));
         findRoomButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         findRoomButton.setForeground(new java.awt.Color(204, 204, 204));
-        findRoomButton.setText("Tìm phòng");
+        findRoomButton.setText("Danh sách phòng");
         findRoomButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 findRoomButtonActionPerformed(evt);
@@ -394,11 +393,6 @@ public class HomePageFrm extends javax.swing.JFrame {
             }
         });
 
-        listUserButton.setBackground(new java.awt.Color(102, 102, 102));
-        listUserButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        listUserButton.setForeground(new java.awt.Color(204, 204, 204));
-        listUserButton.setText("Danh sách người chơi");
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -417,13 +411,13 @@ public class HomePageFrm extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                            .addComponent(historyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(exitGameButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(historyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGap(164, 164, 164)
                             .addComponent(scoreBotButton)
                             .addGap(29, 29, 29)))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(listUserButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(exitGameButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(scoreBoardButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
                         .addComponent(friendListButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(findRoomButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -445,18 +439,16 @@ public class HomePageFrm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(findRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(listUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(friendListButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(scoreBoardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(scoreBotButton)
                     .addComponent(historyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(144, 144, 144)
+                .addGap(130, 130, 130)
                 .addComponent(exitGameButton)
-                .addGap(29, 29, 29))
+                .addGap(43, 43, 43))
         );
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
@@ -641,6 +633,7 @@ public class HomePageFrm extends javax.swing.JFrame {
                 String urlStr = (String) uploadResult.get("url");
                 URL url = new URL(urlStr);
                 Client.socketHandle.write("updateAvatar,"+url);
+                Client.user.setAvatar(urlStr);
                 Image image = ImageIO.read(url);
                 Image scaledImage = image.getScaledInstance(jLabel8.getWidth(), jLabel8.getHeight(), Image.SCALE_SMOOTH);
                 ImageIcon icon = new ImageIcon(scaledImage);
@@ -698,7 +691,6 @@ public class HomePageFrm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JButton listUserButton;
     private javax.swing.JLabel markLabel;
     private javax.swing.JLabel markValue;
     private javax.swing.JTextField messageInput;
