@@ -71,6 +71,7 @@ public class ResultNotificationFrm extends javax.swing.JFrame {
     public void exitGame() throws IOException {
         try {
             Client.closeAllViews();
+            Client.socketHandle.write("cancel-room,");
             Client.socketHandle.write("update-user-info,");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());

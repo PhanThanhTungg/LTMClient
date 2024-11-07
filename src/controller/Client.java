@@ -275,7 +275,6 @@ public class Client {
     }
 
     public void initView() {
-
         loginFrm = new LoginFrm();
         loginFrm.setVisible(true);
         socketHandle = new SocketHandle();

@@ -736,7 +736,7 @@ public class GameClientFrm extends javax.swing.JFrame {
 
     public void startTimer() {
         countDownLabel.setVisible(true);
-        second = 40;
+        second = 10;
         minute = 0;
         timer.start();
     }
@@ -844,8 +844,7 @@ public class GameClientFrm extends javax.swing.JFrame {
                    isTwoCornerPathClear(row1, col1, row2, col2)||
                    isOutPathClear(row1, col1, row2, col2);
             
-        }
-        
+        }     
         private boolean isStraightPathClear(int row1, int col1, int row2, int col2) {
             if (row1 == row2) { 
                 for (int col = Math.min(col1, col2) + 1; col < Math.max(col1, col2); col++) {
@@ -874,27 +873,21 @@ public class GameClientFrm extends javax.swing.JFrame {
         private boolean isOutPathClear(int row1, int col1, int row2, int col2) {
             if(row1==0 && row2==0 || row1==SIZE-1 && row2 == SIZE-1 || 
                     col1==0 && col2==0 ||col1==SIZE-1 && col2==SIZE-1) return true;
-            
             if(isStraightPathClear(row1, col1, 0, col1) && (!buttons[0][col1].isVisible()||row1==0)&&
                     isStraightPathClear(row2, col2, 0, col2)&& (!buttons[0][col2].isVisible()||row2==0)){
                 System.out.println("1");
                 return true;
             }
-                
-            
             if(isStraightPathClear(row1, col1, SIZE-1, col1) && (!buttons[SIZE-1][col1].isVisible()||row1==SIZE-1)&&
                     isStraightPathClear(row2, col2, SIZE-1, col2) && (!buttons[SIZE-1][col2].isVisible()||row2==SIZE-1)){
                 System.out.println("2");
                 return true;
             } 
-                
-            
             if(isStraightPathClear(row1, col1, row1, 0) && (!buttons[row1][0].isVisible()||col1==0)&&
                     isStraightPathClear(row2, col2, row2, 0)&& (!buttons[row2][0].isVisible()||col2==0)){
                 System.out.println("3");
                 return true;
             }
-            
             if(isStraightPathClear(row1, col1, row1, SIZE-1) && (!buttons[row1][SIZE-1].isVisible()||col1==SIZE-1)&&
                     isStraightPathClear(row2, col2, row2, SIZE-1)&& (!buttons[row2][SIZE-1].isVisible()||col2==SIZE-1)){
                 System.out.println("4");
